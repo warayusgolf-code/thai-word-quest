@@ -7,12 +7,43 @@ const data=[["ก","กอ"],["ข","ขอ"],["ค","คอ"],["ง","งอ"],
 const $=id=>document.getElementById(id);let questions=[],index=0,score=0,answered=false,recognition=null,speechTimeout=null;
 function show(id){for(const s of ["home","game","finish"])$(s).classList.toggle("hide",s!==id)}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function say(text){if(!("speechSynthesis" in window)){alert("อุปกรณ์นี้ไม่มีระบบอ่านออกเสียง");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="th-TH";u.rate=.72;u.pitch=1;const vs=speechSynthesis.getVoices();u.voice=vs.find(v=>v.lang.toLowerCase()==="th-th")||vs.find(v=>v.lang.toLowerCase().startsWith("th"))||null;speechSynthesis.speak(u)}
-function begin(){const pool=shuffle(data);questions=[...pool.slice(0,5).map(x=>({type:"listen",item:x})),...pool.slice(5,10).map(x=>({type:"speak",item:x}))];questions=shuffle(questions);index=0;score=0;show("game");render()}
-function render(){answered=false;const q=questions[index];$("step").textContent=(index+1)+" / "+questions.length;$("bar").style.width=((index)/questions.length*100)+"%";$("mode").textContent=q.type==="listen"?"👂 ฟังแล้วเลือก":"🎤 ฝึกออกเสียง";$("prompt").textContent=q.type==="listen"?"เสียงที่ได้ยินคือพยัญชนะใด?":"อ่านออกเสียงพยัญชนะนี้";$("listen").classList.toggle("hide",q.type!=="listen");$("speak").classList.toggle("hide",q.type!=="speak");$("status").textContent="";$("next").classList.add("hide");$("micnote").classList.add("hide");if(q.type==="listen"){const other=shuffle(data.filter(x=>x[0]!==q.item[0]))[0];$("choices").replaceChildren();shuffle([q.item,other]).forEach(item=>{const b=document.createElement("button");b.className="letter";b.textContent=item[0];b.setAttribute("aria-label","พยัญชนะ "+item[0]);b.onclick=()=>choose(item[0],b);$("choices").append(b)});setTimeout(()=>{if(!answered)say(q.item[1])},250)}else{$("bigletter").textContent=q.item[0]}}
+let voiceReady=false;
+function thaiVoice(){return speechSynthesis.getVoices().find(v=>v.lang.toLowerCase()==="th-th")||speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith("th"))||null}
+function say(text){if(!("speechSynthesis" in window)){$("status").textContent="อุปกรณ์นี้ไม่รองรับเสียงอ่านอัตโนมัติ";return}
+speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="th-TH";u.rate=.8;u.pitch=1;const voice=thaiVoice();if(voice)u.voice=voice;
+u.onerror=()=>{$("status").textContent="เล่นเสียงไม่ได้: กรุณาตรวจสอบเสียงภาษาไทยในเครื่อง หรือกดฟังอีกครั้ง"};
+if(!voice){$("status").textContent="ไม่พบเสียงภาษาไทยในอุปกรณ์ อาจอ่านไม่ถูกต้อง กรุณาติดตั้งเสียงภาษาไทย"}
+try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){$("status").textContent="เล่นเสียงไม่ได้: "+e.message}}
+if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{voiceReady=!!thaiVoice()}}
+function begin(){const pool=shuffle(data);questions=[...pool.slice(0,5).map(x=>({type:"listen",item:x})),...pool.slice(5,10).map(x=>({type:"speak",item:x}))];questions=shuffle(questions);index=0;score=0;show("game");render();if(questions[0].type==="listen")say(questions[0].item[1])}
+function render(){answered=false;const q=questions[index];$("step").textContent=(index+1)+" / "+questions.length;$("bar").style.width=((index)/questions.length*100)+"%";$("mode").textContent=q.type==="listen"?"👂 ฟังแล้วเลือก":"🎤 ฝึกออกเสียง";$("prompt").textContent=q.type==="listen"?"เสียงที่ได้ยินคือพยัญชนะใด?":"อ่านออกเสียงพยัญชนะนี้";$("listen").classList.toggle("hide",q.type!=="listen");$("speak").classList.toggle("hide",q.type!=="speak");$("status").textContent="";$("next").classList.add("hide");$("micnote").classList.add("hide");if(q.type==="listen"){const other=shuffle(data.filter(x=>x[0]!==q.item[0]))[0];$("choices").replaceChildren();shuffle([q.item,other]).forEach(item=>{const b=document.createElement("button");b.className="letter";b.textContent=item[0];b.setAttribute("aria-label","พยัญชนะ "+item[0]);b.onclick=()=>choose(item[0],b);$("choices").append(b)});/* เสียงเริ่มเมื่อผู้เล่นกดปุ่มฟัง เพื่อให้มือถืออนุญาตการเล่นเสียง */}else{$("bigletter").textContent=q.item[0]}}
 function choose(letter,btn){if(answered)return;const good=letter===questions[index].item[0];btn.classList.add(good?"correct":"wrong");if(good){score++;$("status").textContent="🌟 ถูกต้อง! เก่งมาก";answered=true;$("next").classList.remove("hide")}else{$("status").textContent="ลองฟังอีกครั้งนะ";say(questions[index].item[1])}}
 function finishSpeak(ok,message){if(answered)return;answered=true;if(ok)score++;$("status").textContent=message;$("next").classList.remove("hide");$("mic").disabled=false}
-function practice(){const q=questions[index];const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$("micnote").textContent="เบราว์เซอร์นี้ยังไม่รองรับการรู้จำเสียงภาษาไทย ลองใช้ Chrome หรือกดฝึกอ่านเอง";$("micnote").classList.remove("hide");return}if(!window.isSecureContext){$("micnote").textContent="ไมโครโฟนต้องเปิดผ่านเว็บไซต์ HTTPS หรือ localhost";$("micnote").classList.remove("hide");return}if(recognition){try{recognition.abort()}catch(e){}}recognition=new SR();recognition.lang="th-TH";recognition.interimResults=false;recognition.maxAlternatives=5;$("mic").disabled=true;$("status").textContent="🎙️ กำลังฟัง... อ่านว่า "+q.item[1];let received=false;recognition.onresult=e=>{received=true;const transcripts=Array.from(e.results[0]).map(x=>x.transcript.replace(/[\s\u200b.,!?。、]/g,""));const expected=q.item[1];const ok=transcripts.some(t=>t===expected);finishSpeak(ok,ok?"🌟 ระบบได้ยินเสียงตรงกับ "+expected:"ระบบได้ยิน: "+transcripts[0]+" — ลองอ่านใหม่ในรอบหน้าได้ (ไม่หักหัวใจ)")};recognition.onerror=e=>{if(!received){$("mic").disabled=false;$("status").textContent="ไม่สามารถรับเสียงได้: "+e.error+" กรุณาลองใหม่หรือเลือกฝึกอ่านเอง"}};recognition.onend=()=>{$("mic").disabled=false;if(!received&& !$("next").classList.contains("hide"))return;if(!received&&$("status").textContent.startsWith("🎙️"))$("status").textContent="ไม่ได้ยินเสียง ลองกดไมค์อีกครั้ง"};try{recognition.start()}catch(e){$("mic").disabled=false;$("status").textContent="เริ่มไมโครโฟนไม่ได้: "+e.message}}
+function practice(){
+const q=questions[index],SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){$("micnote").textContent="เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียงไทย ลองใช้ Chrome หรือฝึกอ่านเอง";$("micnote").classList.remove("hide");return}
+if(!window.isSecureContext){$("micnote").textContent="ต้องเปิดเว็บผ่าน HTTPS เพื่อใช้ไมโครโฟน";$("micnote").classList.remove("hide");return}
+if(recognition){try{recognition.abort()}catch(e){}}
+const r=new SR();recognition=r;r.lang="th-TH";r.interimResults=true;r.continuous=true;r.maxAlternatives=5;
+let heard=false,finished=false,tries=0;const started=Date.now();let latest="",timer=null;
+$("mic").disabled=true;$("status").textContent="🎙️ เปิดไมค์แล้ว กรุณารอเสียงสัญญาณและเริ่มอ่าน";
+function stop(){if(finished)return;finished=true;clearTimeout(timer);try{r.stop()}catch(e){}$("mic").disabled=false}
+function done(ok,msg){stop();finishSpeak(ok,msg)}
+r.onstart=()=>{$("status").textContent="🎙️ กำลังฟังอยู่ อ่านได้เลย: "+q.item[1]};
+r.onresult=e=>{
+let transcripts=[];for(let i=0;i<e.results.length;i++)for(const alt of e.results[i])transcripts.push(alt.transcript.replace(/[\s\u200b.,!?。、]/g,""));
+const expected=q.item[1];latest=transcripts[0]||latest;
+if(transcripts.some(t=>t===expected)){heard=true;done(true,"🌟 เยี่ยม! ระบบได้ยิน "+expected);return}
+$("status").textContent="🎙️ ได้ยิน: "+latest+" — พูดอีกครั้งได้ ยังเปิดไมค์อยู่";
+};
+r.onerror=e=>{if(finished)return;if(e.error==="no-speech"){ $("status").textContent="ยังไม่ได้ยินเสียง ลองพูดใหม่";return}stop();$("status").textContent="ไมโครโฟน: "+e.error+" ลองใหม่หรือฝึกอ่านเอง"};
+r.onend=()=>{if(finished)return;const elapsed=Date.now()-started;
+if(elapsed<7500&&tries<3){tries++;try{r.start();$("status").textContent="🎙️ กำลังฟังต่อ... พูดได้เลย";return}catch(e){}}
+stop();$("status").textContent=latest?"ได้ยินว่า "+latest+" — กดไมค์ลองใหม่ได้":"ยังไม่ได้ยินเสียง กดไมค์ลองใหม่ได้";
+};
+try{r.start()}catch(e){stop();$("status").textContent="เริ่มไมโครโฟนไม่ได้: "+e.message;return}
+timer=setTimeout(()=>{if(!finished){stop();$("status").textContent=latest?"ได้ยินว่า "+latest+" — กดไมค์ลองใหม่ได้":"หมดเวลาฟัง กดไมค์เพื่ออ่านใหม่ได้"}},9500)
+}
 function advance(){if(recognition){try{recognition.abort()}catch(e){}recognition=null}index++;if(index>=questions.length){show("finish");$("stars").textContent=score>=8?"⭐⭐⭐":score>=5?"⭐⭐":"⭐";$("summary").textContent="ได้ "+score+" / 10 ดาวคำตอบ • +"+(score*10)+" XP";let xp=Number(localStorage.getItem("twq_xp")||0)+score*10;localStorage.setItem("twq_xp",String(xp));$("counter").textContent="🌟 "+xp+" XP"}else render()}
-$("start").onclick=begin;$("again").onclick=begin;$("testaudio").onclick=()=>say("กอ");$("play").onclick=()=>say(questions[index].item[1]);$("sample").onclick=()=>say(questions[index].item[1]);$("mic").onclick=practice;$("skip").onclick=()=>finishSpeak(false,"ฝึกอ่านด้วยตนเองแล้ว ✓");$("next").onclick=advance;$("counter").textContent="🌟 "+(localStorage.getItem("twq_xp")||"0")+" XP";
+$("start").onclick=begin;$("again").onclick=begin;$("testaudio").onclick=()=>{say("กอ");if(!thaiVoice())alert("ไม่พบเสียงภาษาไทยในเครื่อง กรุณาติดตั้งเสียงพูดภาษาไทยในตั้งค่าของมือถือหรือคอมพิวเตอร์")};$("play").onclick=()=>say(questions[index].item[1]);$("sample").onclick=()=>say(questions[index].item[1]);$("mic").onclick=practice;$("skip").onclick=()=>finishSpeak(false,"ฝึกอ่านด้วยตนเองแล้ว ✓");$("next").onclick=advance;$("counter").textContent="🌟 "+(localStorage.getItem("twq_xp")||"0")+" XP";
 </script></body></html>
