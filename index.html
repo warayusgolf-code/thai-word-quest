@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#402b77"><title>Thai Word Quest | ป่าเสียงใส</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
 *{box-sizing:border-box}body{margin:0;font-family:"Noto Sans Thai",sans-serif;color:#fff;background:radial-gradient(ellipse at 50% 15%,#6958b4 0,#302358 55%,#181735 100%);min-height:100dvh}button{font:inherit;cursor:pointer;border:0}button:focus-visible{outline:4px solid #f6d56b;outline-offset:3px}.shell{max-width:760px;margin:auto;min-height:100dvh;padding:20px 18px 40px}.top{display:flex;justify-content:space-between;align-items:center;gap:8px}.brand{font-size:18px;font-weight:800}.pill{background:#ffffff23;border:1px solid #ffffff44;border-radius:999px;padding:7px 12px;font-size:13px}.panel{background:linear-gradient(150deg,#fffefa,#e9f8f3);color:#27365d;border:5px solid #e9c675;box-shadow:0 14px 0 #19183d66,0 25px 60px #0b0b2860;border-radius:28px;padding:25px 20px;text-align:center;margin-top:20px}.forest{font-size:75px;filter:drop-shadow(0 7px 3px #0003);margin:20px 0}.title{font-size:clamp(25px,6vw,38px);line-height:1.35;color:#4e367c;margin:10px 0}.subtitle{color:#51627a}.btn{border-radius:18px;padding:14px 20px;font-weight:800;background:linear-gradient(#ffdb76,#eeb448);color:#533c31;box-shadow:0 5px 0 #bd8c38;min-height:54px}.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #bd8c38}.btn.alt{background:#dcebf8;box-shadow:0 5px 0 #9db7ce;color:#263a64}.btn.green{background:#71df9e;box-shadow:0 5px 0 #3da76d}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}.progress{height:13px;background:#d1d9e4;border-radius:20px;overflow:hidden;margin:12px 0}.progress>div{height:100%;background:linear-gradient(90deg,#5cbf8a,#efcc58);transition:width .3s}.letters{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:23px 0}.letter{font-size:clamp(65px,18vw,110px);font-weight:700;background:#fff;border:4px solid #c9c3e6;border-radius:25px;min-height:165px;color:#49367c;box-shadow:0 7px 0 #b7b1d6}.letter.correct{border-color:#35a86b;background:#dcf9e6}.letter.wrong{border-color:#de6970;background:#ffe0e1}.bigletter{font-size:clamp(120px,32vw,200px);font-weight:700;line-height:1.4;color:#563d90}.status{min-height:50px;color:#34496c;font-weight:700}.small{font-size:13px;color:#69748b}.hide{display:none!important}.footer{text-align:center;margin-top:22px;color:#d5ccec;font-size:12px}.mic{font-size:26px}.notice{background:#fff4d4;border:1px solid #e8c874;color:#655127;padding:12px;border-radius:14px;margin:12px 0;font-size:14px}.stars{font-size:45px}.mode{display:inline-block;background:#dfe7ff;border-radius:20px;padding:5px 13px;color:#514b85;font-size:13px;font-weight:800}
-</style></head><body><main class="shell"><header class="top"><span class="brand">✨ Thai Word Quest</span><span class="pill" id="counter">🌟 0 XP</span></header><section id="home" class="panel"><div class="forest" aria-hidden="true">🌳🐉🏰</div><h1 class="title">ป่าเสียงใส</h1><p class="subtitle">ภารกิจที่ 1: ผู้พิทักษ์พยัญชนะ</p><p>ฟังเสียง เลือกพยัญชนะ และฝึกอ่านออกเสียงเพื่อสะสมดาววิเศษ!</p><div class="actions"><button class="btn" id="start">▶ เริ่มผจญภัย</button><button class="btn alt" id="testaudio">🔊 ทดลองเสียง</button></div><p class="small">ใช้ได้บนมือถือและคอมพิวเตอร์ • โหมดไมค์ขึ้นอยู่กับเบราว์เซอร์</p></section><section id="game" class="panel hide"><div class="top"><span class="mode" id="mode"></span><span id="step">1 / 10</span></div><div class="progress"><div id="bar"></div></div><h2 id="prompt" class="title"></h2><div id="listen"><button class="btn alt" id="play">🔊 ฟังเสียงอีกครั้ง</button><div class="letters" id="choices"></div></div><div id="speak" class="hide"><div class="bigletter" id="bigletter"></div><div class="actions"><button class="btn alt" id="sample">🔊 ฟังเสียงตัวอย่าง</button><button class="btn green" id="mic">🎤 กดแล้วอ่าน</button></div><div class="notice hide" id="micnote"></div><div class="actions"><button class="btn alt" id="skip">ฝึกอ่านเองแล้ว ไปต่อ ➜</button></div></div><p class="status" aria-live="polite" id="status"></p><button class="btn hide" id="next">ข้อต่อไป ➜</button></section><section id="finish" class="panel hide"><div class="forest">🐉🏆✨</div><h2 class="title">ผ่านภารกิจ!</h2><div class="stars" id="stars"></div><p id="summary"></p><button class="btn" id="again">เล่นอีกครั้ง</button></section><p class="footer">Thai Word Quest • Noto Sans Thai • ไม่มีการอัปโหลดเสียงไปยังเซิร์ฟเวอร์ของเกม</p></main><script>
+</style></head><body><main class="shell"><header class="top"><span class="brand">✨ Thai Word Quest</span><span class="pill" id="counter">🌟 0 XP</span></header><section id="home" class="panel"><div class="forest" aria-hidden="true">🌳🐉🏰</div><h1 class="title">ป่าเสียงใส</h1><p class="subtitle">ภารกิจที่ 1: ผู้พิทักษ์พยัญชนะ</p><p>ฟังเสียง เลือกพยัญชนะ และฝึกอ่านออกเสียงเพื่อสะสมดาววิเศษ!</p><div class="actions"><button class="btn" id="start">▶ เริ่มผจญภัย</button><button class="btn alt" id="testaudio">🔊 ทดลองเสียง</button></div><p class="small">ใช้ได้บนมือถือและคอมพิวเตอร์ • โหมดไมค์ขึ้นอยู่กับเบราว์เซอร์</p></section><section id="game" class="panel hide"><div class="top"><span class="mode" id="mode"></span><span id="step">1 / 10</span></div><div class="progress"><div id="bar"></div></div><h2 id="prompt" class="title"></h2><div id="listen"><button class="btn alt" id="play">🔊 ฟังเสียงอีกครั้ง</button><div class="letters" id="choices"></div></div><div id="speak" class="hide"><div class="bigletter" id="bigletter"></div><div class="actions"><button class="btn alt" id="sample">🔊 ฟังเสียงตัวอย่าง</button><button class="btn green" id="mic">🎤 เริ่มพูด</button></div><button class="btn alt hide" id="stopmic">⏹ หยุดพูดและตรวจคำตอบ</button><div class="notice hide" id="micnote"></div><div class="actions"><button class="btn alt" id="skip">ฝึกอ่านเองแล้ว ไปต่อ ➜</button></div></div><p class="status" aria-live="polite" id="status"></p><button class="btn hide" id="next">ข้อต่อไป ➜</button></section><section id="finish" class="panel hide"><div class="forest">🐉🏆✨</div><h2 class="title">ผ่านภารกิจ!</h2><div class="stars" id="stars"></div><p id="summary"></p><button class="btn" id="again">เล่นอีกครั้ง</button></section><p class="footer">Thai Word Quest • Noto Sans Thai • ไม่มีการอัปโหลดเสียงไปยังเซิร์ฟเวอร์ของเกม</p></main><script>
 "use strict";
 const data=[["ก","กอ"],["ข","ขอ"],["ค","คอ"],["ง","งอ"],["จ","จอ"],["ช","ชอ"],["ด","ดอ"],["ต","ตอ"],["บ","บอ"],["ป","ปอ"],["ม","มอ"],["น","นอ"]];
-const $=id=>document.getElementById(id);let questions=[],index=0,score=0,answered=false,recognition=null,speechTimeout=null;
+const $=id=>document.getElementById(id);let questions=[],index=0,score=0,answered=false,recognition=null,speechTimeout=null;let micStream=null,micActive=false,micTexts=[],micGeneration=0;
 function show(id){for(const s of ["home","game","finish"])$(s).classList.toggle("hide",s!==id)}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 let voiceReady=false;
@@ -16,34 +16,49 @@ if(!voice){$("status").textContent="ไม่พบเสียงภาษา�
 try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){$("status").textContent="เล่นเสียงไม่ได้: "+e.message}}
 if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{voiceReady=!!thaiVoice()}}
 function begin(){const pool=shuffle(data);questions=[...pool.slice(0,5).map(x=>({type:"listen",item:x})),...pool.slice(5,10).map(x=>({type:"speak",item:x}))];questions=shuffle(questions);index=0;score=0;show("game");render();if(questions[0].type==="listen")say(questions[0].item[1])}
-function render(){answered=false;const q=questions[index];$("step").textContent=(index+1)+" / "+questions.length;$("bar").style.width=((index)/questions.length*100)+"%";$("mode").textContent=q.type==="listen"?"👂 ฟังแล้วเลือก":"🎤 ฝึกออกเสียง";$("prompt").textContent=q.type==="listen"?"เสียงที่ได้ยินคือพยัญชนะใด?":"อ่านออกเสียงพยัญชนะนี้";$("listen").classList.toggle("hide",q.type!=="listen");$("speak").classList.toggle("hide",q.type!=="speak");$("status").textContent="";$("next").classList.add("hide");$("micnote").classList.add("hide");if(q.type==="listen"){const other=shuffle(data.filter(x=>x[0]!==q.item[0]))[0];$("choices").replaceChildren();shuffle([q.item,other]).forEach(item=>{const b=document.createElement("button");b.className="letter";b.textContent=item[0];b.setAttribute("aria-label","พยัญชนะ "+item[0]);b.onclick=()=>choose(item[0],b);$("choices").append(b)});/* เสียงเริ่มเมื่อผู้เล่นกดปุ่มฟัง เพื่อให้มือถืออนุญาตการเล่นเสียง */}else{$("bigletter").textContent=q.item[0]}}
+function render(){stopPractice(false);answered=false;const q=questions[index];$("step").textContent=(index+1)+" / "+questions.length;$("bar").style.width=((index)/questions.length*100)+"%";$("mode").textContent=q.type==="listen"?"👂 ฟังแล้วเลือก":"🎤 ฝึกออกเสียง";$("prompt").textContent=q.type==="listen"?"เสียงที่ได้ยินคือพยัญชนะใด?":"อ่านออกเสียงพยัญชนะนี้";$("listen").classList.toggle("hide",q.type!=="listen");$("speak").classList.toggle("hide",q.type!=="speak");$("status").textContent="";$("next").classList.add("hide");$("micnote").classList.add("hide");if(q.type==="listen"){const other=shuffle(data.filter(x=>x[0]!==q.item[0]))[0];$("choices").replaceChildren();shuffle([q.item,other]).forEach(item=>{const b=document.createElement("button");b.className="letter";b.textContent=item[0];b.setAttribute("aria-label","พยัญชนะ "+item[0]);b.onclick=()=>choose(item[0],b);$("choices").append(b)});/* เสียงเริ่มเมื่อผู้เล่นกดปุ่มฟัง เพื่อให้มือถืออนุญาตการเล่นเสียง */}else{$("bigletter").textContent=q.item[0]}}
 function choose(letter,btn){if(answered)return;const good=letter===questions[index].item[0];btn.classList.add(good?"correct":"wrong");if(good){score++;$("status").textContent="🌟 ถูกต้อง! เก่งมาก";answered=true;$("next").classList.remove("hide")}else{$("status").textContent="ลองฟังอีกครั้งนะ";say(questions[index].item[1])}}
 function finishSpeak(ok,message){if(answered)return;answered=true;if(ok)score++;$("status").textContent=message;$("next").classList.remove("hide");$("mic").disabled=false}
-function practice(){
-const q=questions[index],SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){$("micnote").textContent="เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียงไทย ลองใช้ Chrome หรือฝึกอ่านเอง";$("micnote").classList.remove("hide");return}
-if(!window.isSecureContext){$("micnote").textContent="ต้องเปิดเว็บผ่าน HTTPS เพื่อใช้ไมโครโฟน";$("micnote").classList.remove("hide");return}
-if(recognition){try{recognition.abort()}catch(e){}}
-const r=new SR();recognition=r;r.lang="th-TH";r.interimResults=true;r.continuous=true;r.maxAlternatives=5;
-let heard=false,finished=false,tries=0;const started=Date.now();let latest="",timer=null;
-$("mic").disabled=true;$("status").textContent="🎙️ เปิดไมค์แล้ว กรุณารอเสียงสัญญาณและเริ่มอ่าน";
-function stop(){if(finished)return;finished=true;clearTimeout(timer);try{r.stop()}catch(e){}$("mic").disabled=false}
-function done(ok,msg){stop();finishSpeak(ok,msg)}
-r.onstart=()=>{$("status").textContent="🎙️ กำลังฟังอยู่ อ่านได้เลย: "+q.item[1]};
-r.onresult=e=>{
-let transcripts=[];for(let i=0;i<e.results.length;i++)for(const alt of e.results[i])transcripts.push(alt.transcript.replace(/[\s\u200b.,!?。、]/g,""));
-const expected=q.item[1];latest=transcripts[0]||latest;
-if(transcripts.some(t=>t===expected)){heard=true;done(true,"🌟 เยี่ยม! ระบบได้ยิน "+expected);return}
-$("status").textContent="🎙️ ได้ยิน: "+latest+" — พูดอีกครั้งได้ ยังเปิดไมค์อยู่";
-};
-r.onerror=e=>{if(finished)return;if(e.error==="no-speech"){ $("status").textContent="ยังไม่ได้ยินเสียง ลองพูดใหม่";return}stop();$("status").textContent="ไมโครโฟน: "+e.error+" ลองใหม่หรือฝึกอ่านเอง"};
-r.onend=()=>{if(finished)return;const elapsed=Date.now()-started;
-if(elapsed<7500&&tries<3){tries++;try{r.start();$("status").textContent="🎙️ กำลังฟังต่อ... พูดได้เลย";return}catch(e){}}
-stop();$("status").textContent=latest?"ได้ยินว่า "+latest+" — กดไมค์ลองใหม่ได้":"ยังไม่ได้ยินเสียง กดไมค์ลองใหม่ได้";
-};
-try{r.start()}catch(e){stop();$("status").textContent="เริ่มไมโครโฟนไม่ได้: "+e.message;return}
-timer=setTimeout(()=>{if(!finished){stop();$("status").textContent=latest?"ได้ยินว่า "+latest+" — กดไมค์ลองใหม่ได้":"หมดเวลาฟัง กดไมค์เพื่ออ่านใหม่ได้"}},9500)
+async function practice(){
+if(micActive||answered)return;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!navigator.mediaDevices?.getUserMedia){$("micnote").textContent="อุปกรณ์นี้ไม่รองรับการเปิดไมโครโฟนผ่านเว็บ";$("micnote").classList.remove("hide");return}
+if(!window.isSecureContext){$("micnote").textContent="ต้องเปิดเกมผ่าน HTTPS เพื่อใช้ไมโครโฟน";$("micnote").classList.remove("hide");return}
+$("mic").disabled=true;$("status").textContent="กำลังขออนุญาตไมโครโฟน...";
+try{micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
+catch(e){$("mic").disabled=false;$("status").textContent="เปิดไมค์ไม่ได้: "+e.message;return}
+micActive=true;micTexts=[];micGeneration++;$("mic").classList.add("hide");$("stopmic").classList.remove("hide");
+$("status").textContent="🔴 ไมโครโฟนเปิดอยู่ อ่านได้เลย แล้วกด หยุดพูด";
+if(!SR){$("micnote").textContent="เปิดไมโครโฟนได้ แต่เบราว์เซอร์ไม่รองรับการแปลงเสียงเป็นข้อความ สามารถฝึกอ่านและกดหยุดได้";$("micnote").classList.remove("hide");return}
+startRecognizer(micGeneration,SR);
 }
-function advance(){if(recognition){try{recognition.abort()}catch(e){}recognition=null}index++;if(index>=questions.length){show("finish");$("stars").textContent=score>=8?"⭐⭐⭐":score>=5?"⭐⭐":"⭐";$("summary").textContent="ได้ "+score+" / 10 ดาวคำตอบ • +"+(score*10)+" XP";let xp=Number(localStorage.getItem("twq_xp")||0)+score*10;localStorage.setItem("twq_xp",String(xp));$("counter").textContent="🌟 "+xp+" XP"}else render()}
-$("start").onclick=begin;$("again").onclick=begin;$("testaudio").onclick=()=>{say("กอ");if(!thaiVoice())alert("ไม่พบเสียงภาษาไทยในเครื่อง กรุณาติดตั้งเสียงพูดภาษาไทยในตั้งค่าของมือถือหรือคอมพิวเตอร์")};$("play").onclick=()=>say(questions[index].item[1]);$("sample").onclick=()=>say(questions[index].item[1]);$("mic").onclick=practice;$("skip").onclick=()=>finishSpeak(false,"ฝึกอ่านด้วยตนเองแล้ว ✓");$("next").onclick=advance;$("counter").textContent="🌟 "+(localStorage.getItem("twq_xp")||"0")+" XP";
+function startRecognizer(gen,SR){
+if(!micActive||gen!==micGeneration)return;
+const r=new SR();recognition=r;r.lang="th-TH";r.interimResults=true;r.continuous=true;r.maxAlternatives=5;
+r.onresult=e=>{if(!micActive||gen!==micGeneration)return;
+for(let i=e.resultIndex;i<e.results.length;i++){let list=Array.from(e.results[i]).map(x=>x.transcript.trim());if(e.results[i].isFinal)micTexts.push(...list);
+else if(list[0])$("status").textContent="🔴 กำลังฟัง: "+list[0]+" (กดหยุดเมื่ออ่านเสร็จ)"}
+};
+r.onerror=e=>{if(!micActive||gen!==micGeneration)return;
+if(["not-allowed","service-not-allowed","audio-capture","language-not-supported"].includes(e.error)){$("micnote").textContent="ระบบรู้จำเสียงไม่พร้อม: "+e.error+" แต่ยังฝึกอ่านได้";$("micnote").classList.remove("hide");}
+};
+r.onend=()=>{if(!micActive||gen!==micGeneration)return;
+setTimeout(()=>{if(micActive&&gen===micGeneration)startRecognizer(gen,SR)},450);
+};
+try{r.start()}catch(e){$("micnote").textContent="ระบบรู้จำเสียงไม่พร้อม แต่ไมค์ยังเปิดให้ฝึกอ่านได้";$("micnote").classList.remove("hide")}
+}
+function stopPractice(check=true){
+if(!micActive)return;micActive=false;micGeneration++;
+try{recognition?.abort()}catch(e){}recognition=null;
+try{micStream?.getTracks().forEach(t=>t.stop())}catch(e){}micStream=null;
+$("mic").disabled=false;$("mic").classList.remove("hide");$("stopmic").classList.add("hide");
+if(!check)return;
+const expected=questions[index].item[1];
+const clean=t=>t.replace(/[\\s\\u200b.,!?。、]/g,"").trim();
+const heard=micTexts.map(clean);
+if(heard.some(t=>t===expected))finishSpeak(true,"🌟 ระบบได้ยินเสียง "+expected+" ถูกต้อง!");
+else $("status").textContent=heard.length?"ระบบได้ยินว่า "+heard.join(" / ")+" — กดเริ่มพูดเพื่อลองอีกครั้ง":"หยุดไมค์แล้ว แต่ยังไม่มีคำที่ระบบรู้จำได้ กดเริ่มพูดเพื่อลองอีกครั้ง";
+}
+function advance(){stopPractice(false);if(recognition){try{recognition.abort()}catch(e){}recognition=null}index++;if(index>=questions.length){show("finish");$("stars").textContent=score>=8?"⭐⭐⭐":score>=5?"⭐⭐":"⭐";$("summary").textContent="ได้ "+score+" / 10 ดาวคำตอบ • +"+(score*10)+" XP";let xp=Number(localStorage.getItem("twq_xp")||0)+score*10;localStorage.setItem("twq_xp",String(xp));$("counter").textContent="🌟 "+xp+" XP"}else render()}
+$("start").onclick=begin;$("again").onclick=begin;$("testaudio").onclick=()=>{say("กอ");if(!thaiVoice())alert("ไม่พบเสียงภาษาไทยในเครื่อง กรุณาติดตั้งเสียงพูดภาษาไทยในตั้งค่าของมือถือหรือคอมพิวเตอร์")};$("play").onclick=()=>say(questions[index].item[1]);$("sample").onclick=()=>say(questions[index].item[1]);$("mic").onclick=practice;$("stopmic").onclick=()=>stopPractice(true);$("skip").onclick=()=>{stopPractice(false);finishSpeak(false,"ฝึกอ่านด้วยตนเองแล้ว ✓")};$("next").onclick=advance;$("counter").textContent="🌟 "+(localStorage.getItem("twq_xp")||"0")+" XP";
 </script></body></html>
